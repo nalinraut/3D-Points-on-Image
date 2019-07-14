@@ -8,19 +8,21 @@ This repository implements a method to project points in 3D-space(collected from
 - In the implementation, `P_rect_00`, and `R_rect_00` form the intrinsic camera parameters where `P_rect_00` is the camera matrix and `R_rect_00` is the rectifiaction matrix to make the image co-planar.
 - `RT` matrix that can be best represented as [R|T] transformation matrix provides the extrinsic relation between the camera and LiDAR co-ordinate frames.
 - The final projection of each point in 3D space on to the image plane can be given by:
-'''
+```
 
 Y(image point) = P_rect_00 x R_rect_00 x RT x X(3D LiDAR point)
 
-'''
+```
 - The LiDAR points are scanned in a 360 degrees space and hence even the points scanned behind the vehicle or camera are projected on the image. To avoid this, we eliminate all the points behind the vehicle and outside the camera frame.
  
 
 
 
 ## Results
-The resulting overlay image is shown below. 
+The resulting overlay image is shown below.
+
 ![Original](assets/original.png "Original")
+
 ![Projection_Overlay](assets/overlay.png "Projection Overlay")
 
 
