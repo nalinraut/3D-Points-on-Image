@@ -21,8 +21,10 @@ Y(image point) = P_rect_00 x R_rect_00 x RT x X(3D LiDAR point)
 ## Results
 The resulting overlay image is shown below.
 
+### Original Image
 ![Original](assets/original.png "Original")
 
+### Overlay Image
 ![Projection_Overlay](assets/overlay.png "Projection Overlay")
 
 
