@@ -5,132 +5,259 @@
 #include <opencv2/imgproc.hpp>
 
 #include "utils.hpp"
+#include <fstream>
+#include <sstream>
 
 using namespace std;
 
-
 /*
-	@loadCalibrationData assigns calibration values to calibration matrices
-	
-*/
-void loadCalibrationData(cv::Mat &P_rect_00, cv::Mat &R_rect_00, cv::Mat &RT)
-{
-    RT.at<double>(0,0) = 7.533745e-03; RT.at<double>(0,1) = -9.999714e-01; RT.at<double>(0,2) = -6.166020e-04; RT.at<double>(0,3) = -4.069766e-03;
-    RT.at<double>(1,0) = 1.480249e-02; RT.at<double>(1,1) = 7.280733e-04; RT.at<double>(1,2) = -9.998902e-01; RT.at<double>(1,3) = -7.631618e-02;
-    RT.at<double>(2,0) = 9.998621e-01; RT.at<double>(2,1) = 7.523790e-03; RT.at<double>(2,2) = 1.480755e-02; RT.at<double>(2,3) = -2.717806e-01;
-    RT.at<double>(3,0) = 0.0; RT.at<double>(3,1) = 0.0; RT.at<double>(3,2) = 0.0; RT.at<double>(3,3) = 1.0;
-    
-    R_rect_00.at<double>(0,0) = 9.999239e-01; R_rect_00.at<double>(0,1) = 9.837760e-03; R_rect_00.at<double>(0,2) = -7.445048e-03; R_rect_00.at<double>(0,3) = 0.0;
-    R_rect_00.at<double>(1,0) = -9.869795e-03; R_rect_00.at<double>(1,1) = 9.999421e-01; R_rect_00.at<double>(1,2) = -4.278459e-03; R_rect_00.at<double>(1,3) = 0.0;
-    R_rect_00.at<double>(2,0) = 7.402527e-03; R_rect_00.at<double>(2,1) = 4.351614e-03; R_rect_00.at<double>(2,2) = 9.999631e-01; R_rect_00.at<double>(2,3) = 0.0;
-    R_rect_00.at<double>(3,0) = 0; R_rect_00.at<double>(3,1) = 0; R_rect_00.at<double>(3,2) = 0; R_rect_00.at<double>(3,3) = 1;
-    
-    P_rect_00.at<double>(0,0) = 7.215377e+02; P_rect_00.at<double>(0,1) = 0.000000e+00; P_rect_00.at<double>(0,2) = 6.095593e+02; P_rect_00.at<double>(0,3) = 0.000000e+00;
-    P_rect_00.at<double>(1,0) = 0.000000e+00; P_rect_00.at<double>(1,1) = 7.215377e+02; P_rect_00.at<double>(1,2) = 1.728540e+02; P_rect_00.at<double>(1,3) = 0.000000e+00;
-    P_rect_00.at<double>(2,0) = 0.000000e+00; P_rect_00.at<double>(2,1) = 0.000000e+00; P_rect_00.at<double>(2,2) = 1.000000e+00; P_rect_00.at<double>(2,3) = 0.000000e+00;
+        @loadCalibrationData assigns calibration values to calibration matrices
 
+*/
+void loadCalibrationData(cv::Mat &P_rect_00, cv::Mat &R_rect_00, cv::Mat &RT) {
+  RT.at<double>(0, 0) = 7.533745e-03;
+  RT.at<double>(0, 1) = -9.999714e-01;
+  RT.at<double>(0, 2) = -6.166020e-04;
+  RT.at<double>(0, 3) = -4.069766e-03;
+  RT.at<double>(1, 0) = 1.480249e-02;
+  RT.at<double>(1, 1) = 7.280733e-04;
+  RT.at<double>(1, 2) = -9.998902e-01;
+  RT.at<double>(1, 3) = -7.631618e-02;
+  RT.at<double>(2, 0) = 9.998621e-01;
+  RT.at<double>(2, 1) = 7.523790e-03;
+  RT.at<double>(2, 2) = 1.480755e-02;
+  RT.at<double>(2, 3) = -2.717806e-01;
+  RT.at<double>(3, 0) = 0.0;
+  RT.at<double>(3, 1) = 0.0;
+  RT.at<double>(3, 2) = 0.0;
+  RT.at<double>(3, 3) = 1.0;
+
+  R_rect_00.at<double>(0, 0) = 9.999239e-01;
+  R_rect_00.at<double>(0, 1) = 9.837760e-03;
+  R_rect_00.at<double>(0, 2) = -7.445048e-03;
+  R_rect_00.at<double>(0, 3) = 0.0;
+  R_rect_00.at<double>(1, 0) = -9.869795e-03;
+  R_rect_00.at<double>(1, 1) = 9.999421e-01;
+  R_rect_00.at<double>(1, 2) = -4.278459e-03;
+  R_rect_00.at<double>(1, 3) = 0.0;
+  R_rect_00.at<double>(2, 0) = 7.402527e-03;
+  R_rect_00.at<double>(2, 1) = 4.351614e-03;
+  R_rect_00.at<double>(2, 2) = 9.999631e-01;
+  R_rect_00.at<double>(2, 3) = 0.0;
+  R_rect_00.at<double>(3, 0) = 0;
+  R_rect_00.at<double>(3, 1) = 0;
+  R_rect_00.at<double>(3, 2) = 0;
+  R_rect_00.at<double>(3, 3) = 1;
+
+  P_rect_00.at<double>(0, 0) = 7.215377e+02;
+  P_rect_00.at<double>(0, 1) = 0.000000e+00;
+  P_rect_00.at<double>(0, 2) = 6.095593e+02;
+  P_rect_00.at<double>(0, 3) = 0.000000e+00;
+  P_rect_00.at<double>(1, 0) = 0.000000e+00;
+  P_rect_00.at<double>(1, 1) = 7.215377e+02;
+  P_rect_00.at<double>(1, 2) = 1.728540e+02;
+  P_rect_00.at<double>(1, 3) = 0.000000e+00;
+  P_rect_00.at<double>(2, 0) = 0.000000e+00;
+  P_rect_00.at<double>(2, 1) = 0.000000e+00;
+  P_rect_00.at<double>(2, 2) = 1.000000e+00;
+  P_rect_00.at<double>(2, 3) = 0.000000e+00;
 }
 
+void loadCameraToLidarCalibration(const std::string &calibrationFilePath,
+                                  cv::Mat &RT) {
+  std::ifstream calibFile(calibrationFilePath);
+  if (!calibFile.is_open()) {
+    std::cerr << "[Error] Could not open calibration file: "
+              << calibrationFilePath << std::endl;
+    return;
+  }
 
-/*
-	@lidarOnImage processes image and lidar points and projects the points 
-				  on to the image 
-	
-*/
-void lidarOnImage(const cv::Mat &img, const std::vector<LidarPoint> &lidarPoints)
-{
+  std::string line;
+  while (std::getline(calibFile, line)) {
+    std::istringstream lineStream(line);
+    std::string label;
+    lineStream >> label;
 
+    // Process R and T
+    if (label == "R:") {
+      for (int i = 0; i < 3; ++i)
+        for (int j = 0; j < 3; ++j)
+          lineStream >> RT.at<double>(i, j);
+    } else if (label == "T:") {
+      for (int i = 0; i < 3; ++i)
+        lineStream >> RT.at<double>(i, 3);
 
-	// store calibration data in OpenCV matrices
-	cv::Mat P_rect_00(3, 4, cv::DataType<double>::type);
-	cv::Mat R_rect_00(4, 4, cv::DataType<double>::type);
-	cv::Mat RT(4, 4, cv::DataType<double>::type);
+      // Add the last row [0, 0, 0, 1] for homogeneity
+      RT.at<double>(3, 0) = 0.0;
+      RT.at<double>(3, 1) = 0.0;
+      RT.at<double>(3, 2) = 0.0;
+      RT.at<double>(3, 3) = 1.0;
+    }
+  }
 
-
-
-	loadCalibrationData(P_rect_00, R_rect_00, RT);
-
-	// project lidar points
-	cv::Mat visImg = img.clone();
-	cv::Mat overlay = visImg.clone();
-
-	cv::Mat X(4, 1, cv::DataType<double>::type);
-	cv::Mat Y(3, 1, cv::DataType<double>::type);
-
-	for(auto it=lidarPoints.begin(); it!=lidarPoints.end(); ++it)
-	{
-
-		float maxX = 25.0, maxY = 6.0, minZ = -1.4;
-
-		if(it->x > maxX || it->x < 0.0 || abs(it->y) > maxY || it->z < minZ || it->r < 0.01)
-		{
-
-			continue;
-		}
-
-		X.at<double>(0,0) = it->x;
-		X.at<double>(1,0) = it->y;
-		X.at<double>(2,0) = it->z;
-		X.at<double>(3,0) = 1;
-
-		Y = P_rect_00 * R_rect_00 * RT *X;
-		cv::Point pt;
-		pt.x = Y.at<double>(0, 0)/ Y.at<double>(0,2);
-		pt.y = Y.at<double>(1, 0)/ Y.at<double>(0,2);
-
-		float val = it->x;
-		float maxVal = 20.0;
-		int red = min(255, (int)(255 * abs((val - maxVal) / maxVal)));
-		int green = min(255, (int)(255 * (1 - abs((val - maxVal) / maxVal ))));
-		cv::circle(overlay, pt, 5, cv::Scalar(0, green, red), -1);
-
-
-
-	}
-
-	float opacity = 0.6;
-	cv::addWeighted(overlay, opacity, visImg, 1-opacity, 0, visImg);
-
-	string windowName = "LiDAR data on image overlay";
-
-	cv::namedWindow( windowName, 3);
-	cv::imshow(windowName, visImg);
-	cv::waitKey(0);
-
+  calibFile.close();
 }
 
-int main(int argc, char const *argv[])
-{	
+void loadCameraCalibration(const std::string &calibrationFilePath, cv::Mat &P,
+                           cv::Mat &R_rect) {
+  std::ifstream calibFile(calibrationFilePath);
+  if (!calibFile.is_open()) {
+    std::cerr << "[Error] Could not open calibration file: "
+              << calibrationFilePath << std::endl;
+    return;
+  }
 
-	cv::Mat img;
-	vector<LidarPoint> lidar_pts ;
+  std::string line;
+  while (std::getline(calibFile, line)) {
+    std::istringstream lineStream(line);
+    std::string label;
+    lineStream >> label;
 
-	try
-	{
+    // Process P_rect_00
+    if (label == "P_rect_00:") {
+      for (int i = 0; i < 3; ++i)
+        for (int j = 0; j < 4; ++j)
+          lineStream >> P.at<double>(i, j);
+    } else if (label == "R_rect_00:") {
 
-	// load image in file
-	// IMAGE PATH = "./images/0000000000.png"
-	img = cv::imread(argv[1]);
-	if(img.empty())
-		throw(img);
+      for (int i = 0; i < 3; ++i)
+        for (int j = 0; j < 3; ++j)
+          lineStream >> R_rect.at<double>(i, j);
+    }
+  }
 
-	// load Lidar points from file
-	// LIDAR_POINT_FILE = "./dat/C51_LidarPts_0000.dat"
-    readLidarPts(argv[2], lidar_pts);
-    if(lidar_pts.empty())
-    	throw(lidar_pts);
-	}
-    
+  R_rect.at<double>(0, 3) = 0.0;
+  R_rect.at<double>(1, 3) = 0.0;
+  R_rect.at<double>(2, 3) = 0.0;
 
-	catch(const cv::Mat&)
-	{
-		cerr<<"[Fatal Error] Failed to load image. Check for Path."<<endl;
-	}
+  R_rect.at<double>(3, 0) = 0.0;
+  R_rect.at<double>(3, 1) = 0.0;
+  R_rect.at<double>(3, 2) = 0.0;
+  R_rect.at<double>(3, 3) = 1.0;
+  calibFile.close();
+}
 
-	catch(const std::vector<LidarPoint>&)
-	{
-		cerr<<"[Fatal Error] Failed to load LiDAR points. Check for Path."<<endl;
-	}
+void printCvMat(cv::Mat &mat) {
+  // Print the matrix
+  for (int i = 0; i < mat.rows; ++i) {
+    for (int j = 0; j < mat.cols; ++j) {
+      std::cout << mat.at<double>(i, j) << " ";
+    }
+    std::cout << std::endl;
+  }
+}
 
-	lidarOnImage(img, lidar_pts);
+/*
+        @lidarOnImage processes image and lidar points and projects the points
+                                  on to the image
+
+*/
+void lidarOnImage(const cv::Mat &img,
+                  const std::vector<LidarPoint> &lidarPoints) {
+
+  // store calibration data in OpenCV matrices
+  cv::Mat P_rect_00(3, 4, cv::DataType<double>::type);
+  cv::Mat R_rect_00(4, 4, cv::DataType<double>::type);
+  cv::Mat RT(4, 4, cv::DataType<double>::type);
+
+  // loadCalibrationData(P_rect_00, R_rect_00, RT);
+
+  std::string calib_velo_to_cam =
+      "./52/2011_09_26_calib/2011_09_26/calib_velo_to_cam.txt";
+  std::string calib_cam_to_cam =
+      "./52/2011_09_26_calib/2011_09_26/calib_cam_to_cam.txt";
+
+  loadCameraToLidarCalibration(calib_velo_to_cam, RT);
+  loadCameraCalibration(calib_cam_to_cam, P_rect_00, R_rect_00);
+
+  printCvMat(P_rect_00);
+  printCvMat(R_rect_00);
+
+  // project lidar points
+  cv::Mat visImg = img.clone();
+  cv::Mat overlay = visImg.clone();
+
+  cv::Mat X(4, 1, cv::DataType<double>::type);
+  cv::Mat Y(3, 1, cv::DataType<double>::type);
+
+  for (auto it = lidarPoints.begin(); it != lidarPoints.end(); ++it) {
+
+    float maxX = 25.0, maxY = 6.0, minZ = -1.4;
+
+    if (it->x > maxX || it->x < 0.0 || abs(it->y) > maxY || it->z < minZ ||
+        it->r < 0.01) {
+
+      continue;
+    }
+
+    X.at<double>(0, 0) = it->x;
+    X.at<double>(1, 0) = it->y;
+    X.at<double>(2, 0) = it->z;
+    X.at<double>(3, 0) = 1;
+
+    Y = P_rect_00 * R_rect_00 * RT * X;
+    cv::Point pt;
+    pt.x = Y.at<double>(0, 0) / Y.at<double>(0, 2);
+    pt.y = Y.at<double>(1, 0) / Y.at<double>(0, 2);
+
+    float val = it->x;
+    float maxVal = 20.0;
+    int red = min(255, (int)(255 * abs((val - maxVal) / maxVal)));
+    int green = min(255, (int)(255 * (1 - abs((val - maxVal) / maxVal))));
+    cv::circle(overlay, pt, 5, cv::Scalar(0, green, red), -1);
+  }
+
+  float opacity = 0.6;
+  cv::addWeighted(overlay, opacity, visImg, 1 - opacity, 0, visImg);
+
+  string windowName = "LiDAR data on image overlay";
+
+  cv::namedWindow(windowName, 3);
+  cv::imshow(windowName, visImg);
+  cv::waitKey(0);
+}
+
+int main(int argc, char const *argv[]) {
+
+  cv::Mat img;
+  vector<LidarPoint> lidar_pts;
+
+  try {
+
+    // load image in file
+    // IMAGE PATH = "./images/0000000000.png"
+    img = cv::imread(argv[1]);
+    if (img.empty())
+      throw(img);
+
+    // load Lidar points from file
+    // LIDAR_POINT_FILE = "./dat/C51_LidarPts_0000.dat"
+    readLidarPtsBin(argv[2], lidar_pts);
+    if (lidar_pts.empty())
+      throw(lidar_pts);
+  }
+
+  catch (const cv::Mat &) {
+    cerr << "[Fatal Error] Failed to load image. Check for Path." << endl;
+  }
+
+  catch (const std::vector<LidarPoint> &) {
+    cerr << "[Fatal Error] Failed to load LiDAR points. Check for Path."
+         << endl;
+  }
+
+  lidarOnImage(img, lidar_pts);
+
+  // std::string calib_velo_to_cam =
+  //"./52/2011_09_26_calib/2011_09_26/calib_velo_to_cam.txt";
+  // std::string calib_cam_to_cam =
+  //"./52/2011_09_26_calib/2011_09_26/calib_cam_to_cam.txt";
+
+  // cv::Mat RT(4, 4, cv::DataType<double>::type);
+  // loadCameraToLidarCalibration(calib_velo_to_cam, RT);
+  // print_rt(RT);
+
+  // cv::Mat P_rect_00(3, 4, cv::DataType<double>::type);
+  // loadCameraProjection(calib_cam_to_cam, P_rect_00);
+  // print_rt(P_rect_00);
 }

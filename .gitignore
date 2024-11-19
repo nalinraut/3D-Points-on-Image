@@ -1,0 +1,62 @@
+# General build directory
+/build/
+
+# Compiled object files
+*.o
+*.obj
+*.lo
+*.slo
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Libraries
+*.lib
+*.a
+*.la
+*.lo
+*.dll
+*.dylib
+*.so
+*.so.*
+
+# Executables
+*.exe
+*.out
+*.app
+
+# Debug files
+*.dSYM/
+*.stackdump
+
+# Temporary files
+*.tmp
+*.swp
+*.bak
+*.old
+*.swo
+*.orig
+
+# Logs and databases
+*.log
+*.sql
+*.sqlite
+
+# IDE specific
+.vscode/
+.idea/
+*.code-workspace
+*.user
+*.cbp
+*.project
+*.cproject
+*.sublime-workspace
+*.sublime-project
+
+# CMake specific
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+compile_commands.json
