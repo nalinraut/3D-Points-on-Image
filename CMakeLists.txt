@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
 
-add_definitions(-std=c++11)
+add_definitions(-std=c++17)
 
 set(CXX_FLAGS "-Wall" "-pedantic")
 set(CMAKE_CXX_FLAGS, "${CXX_FLAGS}")
@@ -15,6 +15,9 @@ add_definitions(${OpenCV_DEFINITIONS})
 
 # Executables for exercises
 
-set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ../)
+set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ./)
 add_executable (lidar_camera src/lidar_camera.cpp src/utils.cpp)
 target_link_libraries (lidar_camera ${OpenCV_LIBRARIES})
+
+add_executable (create_depth src/create_depth.cpp src/utils.cpp)
+target_link_libraries (create_depth ${OpenCV_LIBRARIES})

@@ -46,4 +46,23 @@ void read_pod_vector(std::ifstream &in, std::vector<T> &vect);
 template <typename T>
 void write_pod_vector(std::ofstream &out, std::vector<T> &vect);
 
+void printCvMat(cv::Mat &mat);
+
+void loadCameraCalibration(const std::string &calibrationFilePath, cv::Mat &P,
+                           cv::Mat &R_rect);
+
+void loadCameraToLidarCalibration(const std::string &calibrationFilePath,
+                                  cv::Mat &RT);
+
+void loadCameraToCamera(const std::string &calibrationFilePath, cv::Mat &RT);
+
+void lidarOnImage(const cv::Mat &img,
+                  const std::vector<LidarPoint> &lidarPoints);
+
+void depthImage(cv::Mat &imgD, const std::vector<LidarPoint> &lidarPoints);
+
+void saveImage(const cv::Mat &img, const std::string &out_dir,
+               const std::string &name);
+
+void showImage(cv::Mat &img);
 #endif /* UTILS_hpp */
