@@ -12,8 +12,12 @@
 
 void LoadData(const std::filesystem::path &baseDir,
               std::vector<std::string> &vstrImageFilenames,
-              std::string sensor_dir, std::string file_extension);
+              const std::string &sensor_dir, const std::string &file_extension);
+std::filesystem::path findSubDir(const std::filesystem::path &baseDir,
+                                 const std::string &targetDir);
 
+std::filesystem::path findDataDir(const std::filesystem::path &baseDir,
+                                  const std::string &sensor_dir);
 int main(int argc, char **argv) {
   if (argc != 4) {
     std::cerr << std::endl
@@ -82,7 +86,7 @@ int main(int argc, char **argv) {
                 << std::endl;
       return 1;
     }
-    depthImage(imD, lidar_pts);
+    depthImage(imD, lidar_pts, argv[2]);
     std::string fileName = createFileName(ni);
     saveImage(imD, argv[3], fileName);
   }
@@ -90,44 +94,59 @@ int main(int argc, char **argv) {
 
 void LoadData(const std::filesystem::path &baseDir,
               std::vector<std::string> &vstrImageFilenames,
-              std::string sensor_dir, std::string file_extension) {
-  bool imageDirFound = false;
+              const std::string &sensor_dir,
+              const std::string &file_extension) {
 
-  for (const auto &dirEntry :
-       std::filesystem::recursive_directory_iterator(baseDir)) {
-    if (dirEntry.is_directory() && dirEntry.path().filename() == sensor_dir) {
-      // Found the `image_00` directory, check for a `data` subdirectory
-      std::filesystem::path dataDir = dirEntry.path() / "data";
-
-      if (std::filesystem::exists(dataDir) &&
-          std::filesystem::is_directory(dataDir)) {
-        // Iterate through the contents of the `data` subdirectory
-        for (const auto &imagePath :
-             std::filesystem::directory_iterator(dataDir)) {
-          // Check if the file has a `.png` extension
-          if (imagePath.path().extension() == file_extension) {
-            // std::cout << imagePath.path().string() << std::endl;
-            vstrImageFilenames.push_back(imagePath.path().string());
-          }
-        }
-      } else {
-        std::cerr << "'data' subdirectory not found in "
-                  << "'" << sensor_dir << "'" << std::endl;
-      }
-
-      // Stop searching after processing the first `image_00` directory
-      break;
-    }
+  std::filesystem::path dataDir = findDataDir(baseDir, sensor_dir);
+  if (dataDir.empty()) {
+    return; // Exit if `dataDir` is invalid
   }
 
-  std::sort(vstrImageFilenames.begin(), vstrImageFilenames.end());
-  imageDirFound = true;
+  // Iterate through the contents of the `data` subdirectory
+  for (const auto &imagePath : std::filesystem::directory_iterator(dataDir)) {
+    if (imagePath.path().extension() != file_extension) {
+      continue; // Skip files with the wrong extension
+    }
+    vstrImageFilenames.push_back(imagePath.path().string());
+  }
 
-  if (!imageDirFound) {
+  // Sort filenames if any were found
+  if (!vstrImageFilenames.empty()) {
+    std::sort(vstrImageFilenames.begin(), vstrImageFilenames.end());
+  }
+}
+
+std::filesystem::path findDataDir(const std::filesystem::path &baseDir,
+                                  const std::string &sensor_dir) {
+  // Find the sensor directory
+  std::filesystem::path sensorDir = findSubDir(baseDir, sensor_dir);
+  if (sensorDir.empty()) {
     std::cerr << "Folder "
               << "'" << sensor_dir
-              << " not found in the base directory or its "
-                 "subdirectories."
+              << "' not found in the base directory or its subdirectories."
               << std::endl;
+    return {};
   }
+
+  // Find the `data` subdirectory
+  std::filesystem::path dataDir = sensorDir / "data";
+  if (!std::filesystem::exists(dataDir) ||
+      !std::filesystem::is_directory(dataDir)) {
+    std::cerr << "'data' subdirectory not found in "
+              << "'" << sensor_dir << "'" << std::endl;
+    return {};
+  }
+
+  return dataDir;
+}
+
+std::filesystem::path findSubDir(const std::filesystem::path &baseDir,
+                                 const std::string &targetDir) {
+  for (const auto &dirEntry :
+       std::filesystem::recursive_directory_iterator(baseDir)) {
+    if (dirEntry.is_directory() && dirEntry.path().filename() == targetDir) {
+      return dirEntry.path();
+    }
+  }
+  return {}; // Return an empty path if not found
 }

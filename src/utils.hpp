@@ -59,7 +59,8 @@ void loadCameraToCamera(const std::string &calibrationFilePath, cv::Mat &RT);
 void lidarOnImage(const cv::Mat &img,
                   const std::vector<LidarPoint> &lidarPoints);
 
-void depthImage(cv::Mat &imgD, const std::vector<LidarPoint> &lidarPoints);
+void depthImage(cv::Mat &imgD, const std::vector<LidarPoint> &lidarPoints,
+                std::string calibDir);
 
 void saveImage(const cv::Mat &img, const std::string &out_dir,
                const std::string &name);

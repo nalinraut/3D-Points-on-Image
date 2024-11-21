@@ -49,6 +49,6 @@ int main(int argc, char const *argv[]) {
   cv::Mat imD = cv::Mat::zeros(img.size(), CV_16U);
   // lidarOnImage(img, lidar_pts);
   // depthImage(img, lidar_pts);
-  depthImage(imD, lidar_pts);
-  showImage(imD);
+  // depthImage(imD, lidar_pts);
+  // showImage(imD);
 }

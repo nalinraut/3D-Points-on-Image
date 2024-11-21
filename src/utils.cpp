@@ -261,7 +261,8 @@ void lidarOnImage(const cv::Mat &img,
   cv::waitKey(0);
 }
 
-void depthImage(cv::Mat &imgD, const std::vector<LidarPoint> &lidarPoints) {
+void depthImage(cv::Mat &imgD, const std::vector<LidarPoint> &lidarPoints,
+                std ::string calibDir) {
 
   // store calibration data in OpenCV matrices
   cv::Mat P_rect_02(3, 4, cv::DataType<double>::type);
@@ -269,10 +270,8 @@ void depthImage(cv::Mat &imgD, const std::vector<LidarPoint> &lidarPoints) {
   cv::Mat RT(4, 4, cv::DataType<double>::type);
   cv::Mat RT_cam2(4, 4, cv::DataType<double>::type);
 
-  std::string calib_velo_to_cam =
-      "../52/2011_09_26_calib/2011_09_26/calib_velo_to_cam.txt";
-  std::string calib_cam_to_cam =
-      "../52/2011_09_26_calib/2011_09_26/calib_cam_to_cam.txt";
+  std::string calib_velo_to_cam = calibDir + "calib_velo_to_cam.txt";
+  std::string calib_cam_to_cam = calibDir + "calib_cam_to_cam.txt";
 
   loadCameraToLidarCalibration(calib_velo_to_cam, RT);
   loadCameraCalibration(calib_cam_to_cam, P_rect_02, R_rect_02);
