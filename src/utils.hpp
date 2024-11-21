@@ -64,5 +64,7 @@ void depthImage(cv::Mat &imgD, const std::vector<LidarPoint> &lidarPoints);
 void saveImage(const cv::Mat &img, const std::string &out_dir,
                const std::string &name);
 
+std::string createFileName(int fileNumber);
+
 void showImage(cv::Mat &img);
 #endif /* UTILS_hpp */

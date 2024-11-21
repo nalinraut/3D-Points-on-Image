@@ -83,7 +83,8 @@ int main(int argc, char **argv) {
       return 1;
     }
     depthImage(imD, lidar_pts);
-    saveImage(imD, argv[3], std::to_string(ni));
+    std::string fileName = createFileName(ni);
+    saveImage(imD, argv[3], fileName);
   }
 }
 

@@ -7,6 +7,7 @@
 #include <opencv2/imgproc.hpp>
 
 #include <filesystem>
+#include <string>
 /* TEMPLATES */
 
 template <typename T> void write_pod(std::ofstream &out, T &t) {
@@ -303,16 +304,11 @@ void depthImage(cv::Mat &imgD, const std::vector<LidarPoint> &lidarPoints) {
     float val = it->x;
     float maxVal = 20.0;
     int precision = 1 << 16;
-    int red =
+    int intensity =
         std::min(precision, (int)(precision * abs((val - maxVal) / maxVal)));
-    int green = std::min(precision,
-                         (int)(precision * (1 - abs((val - maxVal) / maxVal))));
 
-    // Ensure values fit within the 16-bit range [0, 65535]
-    // red = std::min(red, 65535);
-    // green = std::min(green, 65535);
-
-    cv::circle(imgD, pt, 3, cv::Scalar(0, green, red), -1);
+    // Spread the pixel point a bit out for more dense image.
+    cv::circle(imgD, pt, 3, cv::Scalar(intensity), -1);
   }
 }
 
@@ -327,12 +323,20 @@ void saveImage(const cv::Mat &img, const std::string &out_dir,
   }
 
   // Construct the full path to the image file
-  std::filesystem::path image_path = dir / (name + ".png");
+  std::filesystem::path image_path = dir / name;
 
   // Save the image using OpenCV's imwrite
   if (!cv::imwrite(image_path.string(), img)) {
     throw std::runtime_error("Failed to save image to " + image_path.string());
   }
+}
+
+std::string createFileName(int fileNumber) {
+  // Create a zero-padded filename
+  std::stringstream ss;
+  ss << std::setw(10) << std::setfill('0') << fileNumber << ".png";
+  std::string filename = ss.str();
+  return filename;
 }
 
 void showImage(cv::Mat &img) {
